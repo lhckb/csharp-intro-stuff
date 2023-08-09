@@ -1,4 +1,6 @@
 ﻿
+using FirstTest.Exceptions;
+
 namespace FirstTest
 {
     internal class Program
@@ -24,8 +26,15 @@ namespace FirstTest
                         Console.WriteLine("Input contact phone:");
                         string? phone = Console.ReadLine();
 
-                        controller.AddContact(name, phone);
-                        Console.WriteLine("Contact successfully added");
+                        try
+                        {
+                            controller.AddContact(name, phone);
+                            Console.WriteLine("Contact successfully added");
+                        }
+                        catch(EmptyArgumentException ex)
+                        {
+                            Console.WriteLine($"{ex.Message}");
+                        }
 
                         break;
 
@@ -37,8 +46,24 @@ namespace FirstTest
                     case "3":
                         Console.WriteLine("Input contact name to delete:");
                         string? nameToDelete = Console.ReadLine();
-                        controller.RemoveContact(nameToDelete);
 
+                        try
+                        {
+                            controller.RemoveContact(nameToDelete);
+                        }
+                        catch(ContactNotFoundException ex)
+                        {
+                            Console.WriteLine($"{ex.Message}");
+                        }
+                        catch(ArgumentNullException ex)
+                        {
+                            Console.WriteLine($"{ex.Message}");
+                        }
+                        catch(EmptyArgumentException ex)
+                        {
+                            Console.WriteLine($"{ex.Message}");
+                        }
+                        
                         break;
 
                     case "4":

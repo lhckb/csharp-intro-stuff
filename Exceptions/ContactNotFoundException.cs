@@ -1,8 +1,11 @@
 ﻿
 namespace FirstTest.Exceptions
 {
-    internal class ContactNotFoundException : Exception
+    internal class ContactNotFoundException : ApplicationException
     {
-        public ContactNotFoundException() { }
+        public ContactNotFoundException() : base("Contact not found")
+        {
+            
+        }
     }
 }

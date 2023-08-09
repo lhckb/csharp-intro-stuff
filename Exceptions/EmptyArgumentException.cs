@@ -3,6 +3,8 @@ namespace FirstTest.Exceptions
 {
     internal class EmptyArgumentException: Exception
     {
-        public EmptyArgumentException() { }
+        public EmptyArgumentException() : base("String passed as argument is empty")
+        { 
+        }
     }
 }

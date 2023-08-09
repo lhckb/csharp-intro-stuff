@@ -26,7 +26,7 @@ namespace FirstTest
         {
             if (name.IsEmptyString() || phone.IsEmptyString())
             {
-                throw new ArgumentNullException();
+                throw new EmptyArgumentException();
             }
 
             Contact newContact = new Contact(name, phone);

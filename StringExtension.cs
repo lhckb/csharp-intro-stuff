@@ -5,7 +5,9 @@ namespace FirstTest
     {
         public static bool IsEmptyString(this string str)
         {
-            if (str == null || str == "\n") { return true; }
+            str = str.Trim();
+            
+            if (str.Equals(null) || str.Equals("")) { return true; }
             return false;
         }
     }
