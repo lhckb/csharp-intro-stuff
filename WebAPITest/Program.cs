@@ -11,20 +11,7 @@ namespace WebAPITest
            
             var app = builder.Build();
 
-            app.MapGet("/", () => "Hello World!");
-
-            app.MapGet("/contacts", async (ContactDb db) =>
-            {
-                return await db.Contacts.ToListAsync();
-            });
-
-            app.MapPost("/contacts", async (Contact newContact, ContactDb db) =>
-            {
-                db.Contacts.Add(newContact);
-                await db.SaveChangesAsync();
-
-                return Results.Created($"/contacts/{newContact.Id}", newContact);
-            });
+            ContactEndpointRouter.Map(app);
 
             app.Run();
         }
