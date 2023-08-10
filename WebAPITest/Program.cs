@@ -7,7 +7,7 @@ namespace WebAPITest
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<ContactDb>(opt => opt.UseInMemoryDatabase("Contacts"));
+            builder.Services.AddDbContext<ContactDb>();
            
             var app = builder.Build();
 
