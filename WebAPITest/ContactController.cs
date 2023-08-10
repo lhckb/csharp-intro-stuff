@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPITest.Exceptions;
 
 namespace WebAPITest
 {
@@ -12,34 +13,41 @@ namespace WebAPITest
 
         public static async Task<IResult> GetContactByIdAsync(int id, ContactDb db)
         {
-            Contact? contact = await db.Contacts.FindAsync(id);
-            if (!(contact == null))
+            try
             {
+                Contact contact = await db.GetContactById(id);
                 return Results.Ok(new { Result = contact });
             }
-
-            return Results.UnprocessableEntity(new { Message = $"Contact with ID {id} not found" });
+            catch (ContactNotFoundException ex)
+            {
+                return Results.UnprocessableEntity(new { Message = ex.Message });
+            }
         }
 
         public static async Task<IResult> CreateContactAsync(Contact newContact, ContactDb db)
         {
-            db.Contacts.Add(newContact);
-            await db.SaveChangesAsync();
-
-            return Results.Ok(new { Result = "Created Successfully" });
+            try
+            {
+                _ = await db.AddNewContact(newContact);
+                return Results.Ok(new { Result = "Created Successfully" });
+            }
+            catch (EmptyFieldException ex)
+            {
+                return Results.BadRequest(new { Message = ex.Message });
+            }
         }
 
         public static async Task<IResult> DeleteContactAsync(int id, ContactDb db)
         {
-            Contact? contactToDel = await db.Contacts.FindAsync(id);
-            if (!(contactToDel == null))
+            try
             {
-                db.Contacts.Remove(contactToDel);
-                await db.SaveChangesAsync();
-                return Results.Ok(new { Result = "Deleted Successfully" });
+                _ = await db.DeleteContactById(id);
+                return Results.Ok(new { Result = "Deleted successfully" });
             }
-
-            return Results.UnprocessableEntity(new { Message = $"Contact with ID {id} not found" });
+            catch (ContactNotFoundException ex)
+            {
+                return Results.UnprocessableEntity(new { Message = ex.Message });
+            }
         }
     }
 }

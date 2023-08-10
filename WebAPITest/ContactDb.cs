@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPITest.Exceptions;
 
 namespace WebAPITest
 {
@@ -30,6 +31,45 @@ namespace WebAPITest
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Email).IsRequired();
             });
+        }
+
+        public async Task<bool> AddNewContact(Contact newContact)
+        {
+            string name = newContact.Name;
+            string email = newContact.Email;
+            if (name.IsEmptyString() || email.IsEmptyString())
+            {
+                throw new EmptyFieldException();
+            }
+
+            Contacts.Add(newContact);
+            await SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Contact> GetContactById(int id)
+        {
+            Contact? contact = await Contacts.FindAsync(id);
+            if (contact == null)
+            {
+                throw new ContactNotFoundException(id);
+            }
+
+            return contact;
+        }
+
+        public async Task<bool> DeleteContactById(int id)
+        {
+            try
+            {
+                Contact contact = await GetContactById(id);
+                Contacts.Remove(contact);
+                return true;
+            }
+            catch(ContactNotFoundException ex)
+            {
+                throw ex;
+            }
         }
     }
 }

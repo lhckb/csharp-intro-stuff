@@ -6,7 +6,6 @@ namespace WebAPITest
     {
         public static void Map(WebApplication app)
         {
-
             app.MapGet("/", () => "Hello World!");
 
             app.MapGet("/contacts", async (ContactDb db) =>
