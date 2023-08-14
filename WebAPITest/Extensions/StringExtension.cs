@@ -7,7 +7,7 @@ namespace WebAPITest
         {
             str = str.Trim();
             
-            if (str.Equals(null) || str.Equals("")) { return true; }
+            if (str.Equals("")) { return true; }
             return false;
         }
     }

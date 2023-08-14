@@ -28,7 +28,8 @@ namespace WebAPITest
         {
             try
             {
-                _ = await db.AddNewContact(newContact);
+                await db.AddNewContact(newContact);
+                await db.SaveChangesAsync();
                 return Results.Ok(new { Result = "Created Successfully" });
             }
             catch (EmptyFieldException ex)
@@ -41,12 +42,31 @@ namespace WebAPITest
         {
             try
             {
-                _ = await db.DeleteContactById(id);
+                await db.DeleteContactById(id);
+                await db.SaveChangesAsync();
                 return Results.Ok(new { Result = "Deleted successfully" });
             }
             catch (ContactNotFoundException ex)
             {
                 return Results.UnprocessableEntity(new { Message = ex.Message });
+            }
+        }
+
+        public static async Task<IResult> UpdateContactAsync(int id, Contact updatedContact, ContactDb db)
+        {
+            try
+            {
+                await db.UpdateContactById(id, updatedContact);
+                await db.SaveChangesAsync();
+                return Results.Ok(new { Result = "Updated Successfully" });
+            }
+            catch (ContactNotFoundException ex)
+            {
+                return Results.UnprocessableEntity(new { Message = ex.Message });
+            }
+            catch (EmptyFieldException ex)
+            {
+                return Results.BadRequest(new { Message = ex.Message });
             }
         }
     }

@@ -7,8 +7,6 @@ namespace WebAPITest
     {
         public DbSet<Contact> Contacts => Set<Contact>();
 
-        private readonly IConfiguration _configuration;
-
         public ContactDb(DbContextOptions<ContactDb> options) : base(options) 
         {
             
@@ -67,6 +65,27 @@ namespace WebAPITest
                 return true;
             }
             catch(ContactNotFoundException ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> UpdateContactById(int id, Contact updatedContact)
+        {
+            if (updatedContact.Name.IsEmptyString() || updatedContact.Email.IsEmptyString()) 
+            { 
+                throw new EmptyFieldException(); 
+            }
+
+            try
+            {
+                Contact contact = Contacts.Where(e => e.Id == id).First();
+                _ = updatedContact.Name != null ? contact.Name = updatedContact.Name : null;
+                _ = updatedContact.Email != null ? contact.Email = updatedContact.Email : null;
+                // contact.Email = updatedContact.Email;
+                return true;
+            }
+            catch (ContactNotFoundException ex)
             {
                 throw ex;
             }
